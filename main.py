@@ -8,43 +8,34 @@ import zipfile
 import os.path
 
 
-directory = './files/cache'
+cache_dir = 'cache'
+my_zipfile = 'data.zip'
 parent_dir = os.getcwd()
-path = os.path.join(parent_dir, directory)
+path_to_cache = os.path.join(parent_dir, cache_dir)
+path_to_zipfile = os.path.join(parent_dir, my_zipfile)
 
 
 def clean_cache():
-    if os.path.exists(path):
-        shutil.rmtree(path)
-        os.mkdir(path)
+    if os.path.exists(path_to_cache):
+        shutil.rmtree(path_to_cache)
+        os.mkdir(path_to_cache)
     else:
-        os.mkdir(path)
+        os.mkdir(path_to_cache)
 
 
-clean_cache()
-
-my_zip_file = './files/data.zip'
-my_cache_dir = './files/cache/'
-
-
-def cache_zip(path_to_zip_file, cache_dir_path):
-    with zipfile.ZipFile(path_to_zip_file, 'r') as zip_ref:
-        zip_ref.extractall(cache_dir_path)
-
-
-cache_zip(path_to_zip_file=my_zip_file, cache_dir_path=my_cache_dir)
+def cache_zip(path_to_zipfile, path_to_cache):
+    with zipfile.ZipFile(path_to_zipfile, 'r') as zip_ref:
+        zip_ref.extractall(path_to_cache)
 
 
 def cached_files():
     files = []
-    dir_path = os.path.abspath(path)
+    dir_path = os.path.abspath(path_to_cache)
     for file in os.listdir(dir_path):
         filepath = os.path.join(dir_path, file)
         files.append(filepath)
     return files
 
-
-print(cached_files())
 
 file_list = cached_files()
 
@@ -60,4 +51,8 @@ def find_password(file_list):
     return passwordline[10:-1]
 
 
-print(find_password(file_list))
+if __name__ == '__main__':
+    clean_cache()
+    cache_zip(path_to_zipfile, path_to_cache)
+    print(cached_files())
+    print(find_password(file_list))
